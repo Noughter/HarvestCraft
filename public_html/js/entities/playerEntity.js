@@ -15,7 +15,7 @@ game.playerEntity = me.ObjectEntity.extend({
         this.parent(x, y, settings);
 
         // adjust the bounding box
-        //this.updateColRect(8, 48, -1, 0);
+        this.updateColRect(16, 32, 10, 48);
 
         // Physics
         this.setVelocity(3.0, 3.0);
@@ -32,10 +32,14 @@ game.playerEntity = me.ObjectEntity.extend({
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 
         // set animations
+        //this.direction = 'right';
         this.renderable.addAnimation("up", [0, 1, 2, 3, 4, 5, 6, 7, 8]);
         this.renderable.addAnimation("left", [9, 10, 11, 12, 13, 14, 15, 16, 17]);
         this.renderable.addAnimation("down", [18, 19, 20, 21, 22, 23, 24, 25, 26]);
         this.renderable.addAnimation("right", [27, 28, 29, 30, 31, 32, 33, 34, 35]);
+        
+        // Variablen
+        this.actionPressed = false;
 
     },
     /* -----
@@ -130,10 +134,10 @@ game.playerEntity = me.ObjectEntity.extend({
         } else {
             this.vel.x = 0;
             this.vel.y = 0;
-            var actionPressed = false;
+            this.actionPressed = false;
         } 
         if (me.input.isKeyPressed('action')) {
-            var actionPressed = true;
+            this.actionPressed = true;
         }
 
     },
@@ -143,7 +147,7 @@ game.playerEntity = me.ObjectEntity.extend({
 
         if (res) {
             // if we collide with an enemy
-            if (res.obj.type == me.game.ENEMY_OBJECT) {
+            if (res.obj.type === me.game.ENEMY_OBJECT) {
                 // check if we jumped on it
                 if ((res.y > 0) && !this.jumping) {
                     // bounce (force jump)
@@ -158,9 +162,9 @@ game.playerEntity = me.ObjectEntity.extend({
                     // let's flicker in case we touched an enemy
                     this.renderable.flicker(45);
                 }
-            } // other Collisions   me.ObjectEntity 
-            else if(res.obj instanceof game.npcCharacter.George == true) {
-                console.warn("Missing interaction for " + this.name + " from ");
+            } // Collision with George 
+            else if(res.obj instanceof game.npcCharacter.George === true && this.actionPressed === true) {
+                console.warn("Hi I'm George How are you?");
             }
         }
     }

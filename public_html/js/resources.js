@@ -2,6 +2,7 @@ game.resources = {
     /* Graphics. */
     "img" : [
         // UI
+        "32x32_font",
 
         // Characters
         "mainPlayer",
@@ -13,10 +14,12 @@ game.resources = {
         // Collectibles
 
         // Interactive objects
+        "plants",
 
         // Tile maps       
         "grass",
-        "plowed_soil"
+        "plowed_soil",
+        "metatiles32x32"
 
     ],
 

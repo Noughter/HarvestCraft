@@ -41,14 +41,6 @@ var game = {
 
         // Initialize the audio.
         me.audio.init("mp3,ogg");
-        
-        // Keyboard Bindings
-        me.input.bindKey(me.input.KEY.LEFT, "left");
-        me.input.bindKey(me.input.KEY.RIGHT, "right");
-        me.input.bindKey(me.input.KEY.UP, "up");
-        me.input.bindKey(me.input.KEY.DOWN, "down");
-        me.input.bindKey(me.input.KEY.SPACE, "jump", true);
-
 
         // Set a callback to run when loading is complete.
         me.loader.onload = this.loaded.bind(this);
@@ -124,7 +116,7 @@ var game = {
         // add our player entity in the entity pool
         me.entityPool.add("mainPlayer", game.playerEntity);
         me.entityPool.add("George", game.npcCharacter.George);
-        me.entityPool.add("basicItem", game.basicItem);
+        me.entityPool.add("applePlant", game.plants.applePlant);
         
        //var george = me.entityPool.newInstanceOf("George", 20, 30, 2, 3, 4);
        //me.game.add(george, this.z);     
@@ -135,13 +127,20 @@ var game = {
         //    me.loader.getJSON("texture"),
         //    me.loader.getImage("texture")
         //);
+        
+        
+
+// add a default HUD to the game mngr (with no background)
+me.game.addHUD(0,0,480,100);
+// add the "score" HUD item
+me.game.HUD.addItem("hud", new HUDObject(470,10));
 
         // enable the keyboard
         me.input.bindKey(me.input.KEY.LEFT, "left");
         me.input.bindKey(me.input.KEY.RIGHT, "right");
         me.input.bindKey(me.input.KEY.UP, "up");
         me.input.bindKey(me.input.KEY.DOWN, "down");
-        me.input.bindKey(me.input.KEY.SPACE, "jump", true);
+        me.input.bindKey(me.input.KEY.SPACE, "action");
 
         // Start the game.
         me.state.change(me.state.PLAY);
