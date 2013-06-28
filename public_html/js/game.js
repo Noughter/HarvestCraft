@@ -80,7 +80,17 @@ var game = {
                 "src"   : "data/map/" + value + ".tmx"
             })
         });
-
+        
+        /* Atlases.
+        this.resources["tex"].forEach(function forEach(value) {
+            resources.push({
+                "name"  : value,
+                "type"  : "png",
+                "src"   : "data/img/" + value + ".json"
+            })
+        });
+        */
+       
         // Sound effects.
         this.resources["sfx"].forEach(function forEach(value) {
             resources.push({
@@ -112,9 +122,19 @@ var game = {
         me.state.set(me.state.PLAY, new game.PlayScreen());
 
         // add our player entity in the entity pool
-        me.entityPool.add("mainPlayer", game.Player);
+        me.entityPool.add("mainPlayer", game.playerEntity);
+        me.entityPool.add("George", game.npcCharacter.George);
         me.entityPool.add("basicItem", game.basicItem);
-        me.entityPool.add("george",game.npc);
+        
+       //var george = me.entityPool.newInstanceOf("George", 20, 30, 2, 3, 4);
+       //me.game.add(george, this.z);     
+            
+        
+        // Load texture.
+        //game.texture = new me.TextureAtlas(
+        //    me.loader.getJSON("texture"),
+        //    me.loader.getImage("texture")
+        //);
 
         // enable the keyboard
         me.input.bindKey(me.input.KEY.LEFT, "left");

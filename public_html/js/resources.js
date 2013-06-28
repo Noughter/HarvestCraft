@@ -4,7 +4,7 @@ game.resources = {
         // UI
 
         // Characters
-        "heroRight",
+        "mainPlayer",
         "george",
         
 

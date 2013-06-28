@@ -1,34 +1,41 @@
 /*------------------- 
  a player entity
  -------------------------------- */
-game.Player = me.ObjectEntity.extend({
+game.playerEntity = me.ObjectEntity.extend({
     /* -----
      
      constructor
      
      ------ */
-    init: function(x, y, settings) {
-        /*Image muss noch mit AnimationSheet geladen werden
-        Variante mit jedesmal anderes SpriteSheet laden schlechter und fnktionierte nicht richtig ->
-        var character = new Array("heroBack", "heroRight", "heroLeft");     
-	var chosen = 0;*/
-	settings.image = "heroRight";  //character[chosen];
-	settings.spritewidth = 64;
-        
+    "init": function(x, y, settings) {
+        settings.image = "mainPlayer";  //vor Constructorcall
+        settings.spritewidth = 64;
+        settings.spriteheight = 64;
         // call the constructor
         this.parent(x, y, settings);
-        
-        // Physics
-        this.setVelocity(3.0, 3.0);
-        //set gravity of player = 0
-        this.gravity = 0;
-        
-        
+
         // adjust the bounding box
         //this.updateColRect(8, 48, -1, 0);
 
+        // Physics
+        this.setVelocity(3.0, 3.0);
+        this.setMaxVelocity(5, 10);
+        //set gravity of player = 0
+        this.gravity = 0;
+        //Friction
+        this.setFriction(0.25, 0);
+
+        //AnimationSpeed
+        this.animationspeed = me.sys.fps / 20;
+
         // set the display to follow our position on both axis
         me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+
+        // set animations
+        this.renderable.addAnimation("up", [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+        this.renderable.addAnimation("left", [9, 10, 11, 12, 13, 14, 15, 16, 17]);
+        this.renderable.addAnimation("down", [18, 19, 20, 21, 22, 23, 24, 25, 26]);
+        this.renderable.addAnimation("right", [27, 28, 29, 30, 31, 32, 33, 34, 35]);
 
     },
     /* -----
@@ -36,48 +43,12 @@ game.Player = me.ObjectEntity.extend({
      update the player pos
      
      ------ */
-    update: function() {        
-        if (me.input.isKeyPressed('left')) {            
-            //this.image = me.loader.getImage("heroRight"); funktioniert so nicht -> sollte neuen Sprite laden
-            // flip the sprite on horizontal axis
-            this.flipX(true);
-            // update the entity velocity
-            this.vel.x -= this.accel.x * me.timer.tick;
-            //this.setVelocity(1, 0);
-        } else if (me.input.isKeyPressed('right')) {
-            // unflip the sprite
-            this.flipX(false);
-            // update the entity velocity
-            this.vel.x += this.accel.x * me.timer.tick;
-        } else if (me.input.isKeyPressed('up')) {
-            this.flipY(false);
-            // update the entity velocity
-            this.vel.y = -this.accel.y * me.timer.tick;
-        } else if (me.input.isKeyPressed('down')) {
-            // unflip the sprite
-            this.flipY(false);
-            // update the entity velocity
-            this.vel.y = this.accel.y * me.timer.tick;
-        } else {
-            this.vel.x = 0;
-            this.vel.y = 0;
-        }        
-        if (me.input.isKeyPressed('jump')) {
-            // make sure we are not already jumping or falling
-            if (!this.jumping && !this.falling) {
-                // set current vel to the maximum defined value
-                // gravity will then do the rest
-                this.vel.y = -this.maxVel.y * me.timer.tick;
-                // set the jumping flag
-                this.jumping = true;
-                // play some audio 
-                me.audio.play("jump");
-            }
-
-        }
+    "update": function() {
+        this.checkInput();
         // check & update player movement
         this.updateMovement();
-
+        this.checkCollision();
+/*
         // check for collision
         var res = me.game.collide(this);
 
@@ -98,19 +69,100 @@ game.Player = me.ObjectEntity.extend({
                     // let's flicker in case we touched an enemy
                     this.renderable.flicker(45);
                 }
+            } // other Collisions
+            else {
+                console.warn("Missing interaction for " + this.name + " from ");
             }
         }
-
+*/
         // update animation if necessary
-        if (this.vel.x != 0 || this.vel.y != 0) {
+        if (this.vel.x > 0) {
             // update object animation
             this.parent();
+            this.renderable.setCurrentAnimation("right");
+            return true;
+        } else if (this.vel.x < 0) {
+            this.renderable.setCurrentAnimation("left");
+            return true;
+        } else if (this.vel.y > 0) {
+            this.renderable.setCurrentAnimation("down");
+            return true;
+        } else if (this.vel.y < 0) {
+            this.renderable.setCurrentAnimation("up");
             return true;
         }
 
         // else inform the engine we did not perform
         // any update (e.g. position, animation)
         return false;
+    },
+    "checkInput": function checkInput() {
+        if (me.input.isKeyPressed('left')) {
+            // flip the sprite on horizontal axis
+            //this.flipX(true);
+            this.parent();
+            this.renderable.setCurrentAnimation("left");
+            // update the entity velocity
+            this.vel.x -= this.accel.x * me.timer.tick;
+            //this.setVelocity(1, 0);
+        } else if (me.input.isKeyPressed('right')) {
+            // unflip the sprite
+            //this.flipX(false);
+            this.parent();
+            this.renderable.setCurrentAnimation("right");
+            // update the entity velocity
+            this.vel.x += this.accel.x * me.timer.tick;
+        } else if (me.input.isKeyPressed('up')) {
+            //this.parent();     
+            //this.renderable.offset.set();
+            this.parent();
+            this.renderable.setCurrentAnimation("up");
+            //this.flipY(false);
+            // update the entity velocity
+            this.vel.y = -this.accel.y * me.timer.tick;
+        } else if (me.input.isKeyPressed('down')) {
+            // unflip the sprite
+            //this.flipY(false);
+            this.parent();
+            this.renderable.setCurrentAnimation("down");
+            // update the entity velocity
+            this.vel.y = this.accel.y * me.timer.tick;
+        } else {
+            this.vel.x = 0;
+            this.vel.y = 0;
+            var actionPressed = false;
+        } 
+        if (me.input.isKeyPressed('action')) {
+            var actionPressed = true;
+        }
+
+    },
+    "checkCollision": function checkCollision() {
+        // check for collision
+        var res = me.game.collide(this);
+
+        if (res) {
+            // if we collide with an enemy
+            if (res.obj.type == me.game.ENEMY_OBJECT) {
+                // check if we jumped on it
+                if ((res.y > 0) && !this.jumping) {
+                    // bounce (force jump)
+                    this.falling = false;
+                    this.vel.y = -this.maxVel.y * me.timer.tick;
+                    // set the jumping flag
+                    this.jumping = true;
+                    // play some audio
+                    me.audio.play("stomp");
+
+                } else {
+                    // let's flicker in case we touched an enemy
+                    this.renderable.flicker(45);
+                }
+            } // other Collisions   me.ObjectEntity 
+            else if(res.obj instanceof game.npcCharacter.George == true) {
+                console.warn("Missing interaction for " + this.name + " from ");
+            }
+        }
     }
 
 });
