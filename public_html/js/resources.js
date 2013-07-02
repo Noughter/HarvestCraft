@@ -15,6 +15,9 @@ game.resources = {
 
         // Interactive objects
         "plants",
+        
+        //InventarObjekte
+        "IronShovel",
 
         // Tile maps       
         "grass",

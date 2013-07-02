@@ -1,5 +1,5 @@
 /*
- * HarvestCraft, a sanboc farming RPG
+ * HarvestCraft, a sandbox farming RPG
  * Copyright (C) 2013  Marvin Ponten
  *
  * This program is free software: you can redistribute it and/or modify
@@ -20,12 +20,11 @@
 /* Game namespace */
 var game = {
     // Whether a dialog box is waiting for input.
-    "modal" : false,
+    "modal": false,
     // `true` when an object's y-coordinate changes to put it at the proper Z-order.
-    "wantsResort" : false,            
-            
+    "wantsResort": false,
     // Run on page load.
-    "onload": function() {        
+    "onload": function() {
         // Initialize the video.
         if (!me.video.init("screen", c.WIDTH, c.HEIGHT)) {
             alert("Your browser does not support HTML5 canvas.");
@@ -45,69 +44,66 @@ var game = {
         // Set a callback to run when loading is complete.
         me.loader.onload = this.loaded.bind(this);
         // Load the resources.
-        this.loadResources();      
+        this.loadResources();
 
         // Initialize melonJS and display a loading screen.
-        me.state.change(me.state.LOADING);        
+        me.state.change(me.state.LOADING);
     },
-            
-    "loadResources" : function loadResources() {
+    "loadResources": function loadResources() {
         // Set all resources to be loaded.
         var resources = [];
 
         // Graphics.
         this.resources["img"].forEach(function forEach(value) {
             resources.push({
-                "name"  : value,
-                "type"  : "image",
-                "src"   : "data/img/" + value + ".png"
-            })           
+                "name": value,
+                "type": "image",
+                "src": "data/img/" + value + ".png"
+            })
         });
 
         // Maps.
         this.resources["map"].forEach(function forEach(value) {
             resources.push({
-                "name"  : value,
-                "type"  : "tmx",
-                "src"   : "data/map/" + value + ".tmx"
+                "name": value,
+                "type": "tmx",
+                "src": "data/map/" + value + ".tmx"
             })
         });
-        
+
         /* Atlases.
-        this.resources["tex"].forEach(function forEach(value) {
-            resources.push({
-                "name"  : value,
-                "type"  : "png",
-                "src"   : "data/img/" + value + ".json"
-            })
-        });
-        */
-       
+         this.resources["tex"].forEach(function forEach(value) {
+         resources.push({
+         "name"  : value,
+         "type"  : "png",
+         "src"   : "data/img/" + value + ".json"
+         })
+         });
+         */
+
         // Sound effects.
         this.resources["sfx"].forEach(function forEach(value) {
             resources.push({
-                "name"      : value,
-                "type"      : "audio",
-                "src"       : "data/sfx/",
-                "channel"   : 1
+                "name": value,
+                "type": "audio",
+                "src": "data/sfx/",
+                "channel": 1
             })
         });
 
         // Music.
         this.resources["bgm"].forEach(function forEach(value) {
             resources.push({
-                "name"      : value,
-                "type"      : "audio",
-                "src"       : "data/bgm/",
-                "channel"   : 2
+                "name": value,
+                "type": "audio",
+                "src": "data/bgm/",
+                "channel": 2
             })
         });
 
         // Load the resources.
         me.loader.preload(resources);
     },
-            
-            
     // Run on game resources loaded.
     "loaded": function() {
         me.state.set(me.state.MENU, new game.TitleScreen());
@@ -117,23 +113,27 @@ var game = {
         me.entityPool.add("mainPlayer", game.playerEntity);
         me.entityPool.add("George", game.npcCharacter.George);
         me.entityPool.add("applePlant", game.plants.applePlant);
-        
-       //var george = me.entityPool.newInstanceOf("George", 20, 30, 2, 3, 4);
-       //me.game.add(george, this.z);     
-            
-        
+
+        //var george = me.entityPool.newInstanceOf("George", 20, 30, 2, 3, 4);
+        //me.game.add(george, this.z);
+
         // Load texture.
         //game.texture = new me.TextureAtlas(
         //    me.loader.getJSON("texture"),
         //    me.loader.getImage("texture")
         //);
-        
-        
 
-// add a default HUD to the game mngr (with no background)
-me.game.addHUD(0,0,480,100);
-// add the "score" HUD item
-me.game.HUD.addItem("hud", new HUDObject(470,10));
+
+
+        // add a default HUD to the game mngr (with no background)
+        me.game.addHUD(0, 0, 800, 600);
+        // add the "score" HUD item
+        me.game.HUD.addItem("score", new hud(5, 20));
+        me.game.HUD.addItem("health", new HealthObject(5, 60));
+        me.game.HUD.addItem("inventar", new InventarObject());
+        
+        //me.game.HUD.addItem("inventar1Choosen", new Inventar1Choosen());
+        //me.game.HUD.addItem("inventar2Choosen", new Inventar2Choosen());
 
         // enable the keyboard
         me.input.bindKey(me.input.KEY.LEFT, "left");
@@ -141,6 +141,9 @@ me.game.HUD.addItem("hud", new HUDObject(470,10));
         me.input.bindKey(me.input.KEY.UP, "up");
         me.input.bindKey(me.input.KEY.DOWN, "down");
         me.input.bindKey(me.input.KEY.SPACE, "action");
+        me.input.bindKey(me.input.KEY.NUM1, "1");
+        me.input.bindKey(me.input.KEY.NUM2, "2");
+        me.input.bindKey(me.input.KEY.NUM3, "3");
 
         // Start the game.
         me.state.change(me.state.PLAY);

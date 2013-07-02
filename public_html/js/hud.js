@@ -1,58 +1,157 @@
-// create a "score object" that will use a Bitmap font
-// to display the score value
-HUDObject = me.HUD_Item.extend({
-    // constructor
-    init: function(x, y){
+var hud = me.HUD_Item.extend({
+    init: function(x, y) {
         this.parent(x, y);
-        
-        // Cache image for item name
-        var font = new me.Font("Verdana", 18, "#fff", "left");
-        font.bold();
-        var ctx = me.video.createCanvasSurface(100, 20);
-        this.label = ctx.canvas;
-        this.label.width = font.measureText(ctx, name + ":").width;
-        this.label.height = 20;
-
-        ctx.shadowBlur = 3;
-        ctx.shadowColor = "#000";
-        ctx.shadowOffsetX = 2;
-        ctx.shadowOffsetY = 2;
-
-        font.draw(ctx, name + ":", 0, 0);
+        this.font = new me.BitmapFont("32x32_font", 32);
+        context = this.context;
     },
-    // draw function
-    draw: function(context)
-    {var x = this.pos.x;
-        var y = this.pos.y;
+    draw: function(context, x, y) {
+        this.font.draw(context, "SCORE: " + this.value, this.pos.x + x, this.pos.y + y);
+    }
+});
 
-        context.save();
+var HealthObject = me.HUD_Item.extend({
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.BitmapFont("32x32_font", 32);
+    },
+    draw: function(context, x, y) {
+        this.font.draw(context, "HP: " + this.value, this.pos.x + x, this.pos.y + y);
+    }
+});
 
-        // Draw border
-        context.strokeStyle = context.fillStyle = "#004058";
-        context.lineJoin = "round";
-        context.lineWidth = 3;
-        context.strokeRect(x + 0.5, y + 0.5, this.defaultvalue, 20);
-        context.fillRect(x + 2, y + 2, this.defaultvalue, 17);
+var InventarObject = me.HUD_Item.extend({
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.Font("Arial", 22, "#fff", "left");
 
-        // Setup clipping region for meter segments
+        //var ctx = me.video.createCanvasSurface(500, 700);
+        //this.label = ctx.canvas;
+        //this.label.width = this.font.measureText(ctx, name + ":").width;
+        //this.label.width = 100;
+        //this.label.height = 20;
+    },
+    draw: function(context, x, y) {
+        //Inventar Platz 1
         context.beginPath();
-        for (var i = 0; i < this.defaultvalue; i += 16) {
-            context.rect(x + 2 + i, y + 2, 13, 17);
-        }
-        context.clip();
+        context.rect(200, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj1 = new Image();
+        inventarObj1.src = " http://media-mcw.cursecdn.com/a/ab/Ironsword.png";
+        context.drawImage(inventarObj1, 205, 545,40,40);
+        
+        
+        //Inventar Platz 2
+        context.beginPath();
+        context.rect(270, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj2 = new Image();
+        inventarObj2.src = "http://images3.wikia.nocookie.net/__cb20110822135958/mcmmo/images/f/ff/IronHoe.png";
+        context.drawImage(inventarObj2, 270, 540,50,50);
+        
+        
+        //Inventar Platz 3
+        context.beginPath();
+        context.rect(340, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj3 = new Image();
+        inventarObj3.src = "http://images.wikia.com/mcmmo/images/5/5f/IronShovel.png";
+        context.drawImage(inventarObj3, 340, 540,50,50);
+        
+        //Inventar Platz 4
+        context.beginPath();
+        context.rect(410, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj4 = new Image();
+        inventarObj4.src = "http://4.bp.blogspot.com/-MkUqGXVFq4U/TxenTUnLd5I/AAAAAAAAAL0/Vz5vaFhQeUI/s1600/stone%2Bpick%2Baxe.png";
+        context.drawImage(inventarObj4, 415, 545,40,40);
+        
+        //Inventar Platz 5
+        context.beginPath();
+        context.rect(480, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj4 = new Image();
+        inventarObj4.src = "http://media-mcw.cursecdn.com/8/81/Waterbucket.PNG";
+        context.drawImage(inventarObj4, 485, 545,40,40);
+        
+        //Inventar Platz 6
+        context.beginPath();
+        context.rect(550, 540, 50, 50);
+        context.lineWidth = 7;
+        context.strokeStyle = 'black';
+        context.stroke();
+        
+        var inventarObj4 = new Image();
+        inventarObj4.src = "http://images.gamebase.com.tw/2009/zone/facebook/ps_icon/farm-seed-bag.png";
+        context.drawImage(inventarObj4, 550, 540,50,50);  
+    }
+});
 
-        // Draw background color
-        context.fillStyle = this.bg;
-        context.fillRect(x + 2, y + 2, this.defaultvalue, 17);
 
-        // Draw foreground color
-        context.fillStyle = this.fg;
-        context.fillRect(x + 2, y + 2, ~~this.value, 17);
+var Inventar1Choosen = me.HUD_Item.extend({
+    // Bereich löschen mit context.clearRect(190, 530, 70, 70);
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.Font("Arial", 22, "#fff", "left");
+    },
+    draw: function(context, x, y) {
+        context.beginPath();
+        context.rect(200, 540, 50, 50);
+        context.lineWidth = 12;
+        context.strokeStyle = 'red';
+        context.stroke();
+        //context.clearRect(190, 530, 70, 70);
+    }
+});
+var Inventar2Choosen = me.HUD_Item.extend({
+    // Bereich löschen mit context.clearRect(190, 530, 70, 70);
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.Font("Arial", 22, "#fff", "left");
+    },
+    draw: function(context, x, y) {
+        context.beginPath();
+        context.rect(270, 540, 50, 50);
+        context.lineWidth = 12;
+        context.strokeStyle = 'red';
+        context.stroke();
+        context.clearRect(190, 530, 70, 70);
+    }
+});
 
-        // Destroy clipping region
-        context.restore();
 
-        // Draw label
-        context.drawImage(this.label, x, y - 24);
+var TestObject = me.HUD_Item.extend({
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.Font("Arial", 22, "#fff", "left");
+        this.font.bold();
+        this.value = 0;
+    },
+    draw: function(context, x, y) {
+        this.font.draw(context, "AMMO: " + this.value, this.pos.x + x, this.pos.y + y);
+    }
+});
+
+var TimerObject = me.HUD_Item.extend({
+    init: function(x, y) {
+        this.parent(x, y);
+        this.font = new me.BitmapFont("32x32_font", 32);
+    },
+    draw: function(context, x, y) {
+        this.font.draw(context, "TIME: " + this.value, this.pos.x + x, this.pos.y + y)
     }
 });

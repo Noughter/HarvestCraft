@@ -40,6 +40,11 @@ game.playerEntity = me.ObjectEntity.extend({
         
         // Variablen
         this.actionPressed = false;
+        this.inventar1Choosen = true;
+        this.inventar2Choosen = false;
+        this.inventar3Choosen = false;
+        this.health = 100;
+        this.score = 0;
 
     },
     /* -----
@@ -52,7 +57,26 @@ game.playerEntity = me.ObjectEntity.extend({
         // check & update player movement
         this.updateMovement();
         this.checkCollision();
-/*
+        
+        //HUD
+        me.game.HUD.setItemValue("health", this.health);        
+        me.game.HUD.setItemValue("score", this.score);
+        
+        /*if(this.inventar1Choosen){
+            me.game.HUD.addItem("inventar1Choosen", new Inventar1Choosen());
+            if(this.actionPressed){
+                console.warn("will jetzt pflanzen");
+            }
+        } else { console.warn("Bed1");
+            me.game.HUD.removeItem("inventar1Choosen")};    
+        
+        if(this.inventar2Choosen){
+            me.game.HUD.addItem("inventar2Choosen", new Inventar2Choosen());
+            me.game.HUD.removeItem("inventar1Choosen")
+        } else { console.warn("Bed2");
+            me.game.HUD.removeItem("inventar2Choosen")};
+        
+/*  
         // check for collision
         var res = me.game.collide(this);
 
@@ -101,6 +125,8 @@ game.playerEntity = me.ObjectEntity.extend({
         return false;
     },
     "checkInput": function checkInput() {
+
+    //Bewegung
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
             //this.flipX(true);
@@ -135,10 +161,29 @@ game.playerEntity = me.ObjectEntity.extend({
             this.vel.x = 0;
             this.vel.y = 0;
             this.actionPressed = false;
-        } 
+        }
+        
+        //weitere Eingaben
         if (me.input.isKeyPressed('action')) {
             this.actionPressed = true;
+        } else if (me.input.isKeyPressed('1')) {
+            this.inventar1Choosen = true;
+            this.inventar2Choosen = false;
+            this.inventar3Choosen = false;
+            //me.game.HUD.removeItem("inventar2Choosen");
+            //me.game.HUD.addItem("inventar1Choosen", new Inventar1Choosen());
+        } else if (me.input.isKeyPressed('2')) {
+            this.inventar1Choosen = false;
+            this.inventar2Choosen = true;
+            this.inventar3Choosen = false;
+            //me.game.HUD.removeItem("inventar1Choosen");
+            //me.game.HUD.addItem("inventar2Choosen", new Inventar2Choosen());
+        } else if (me.input.isKeyPressed('3')) {
+            me.game.HUD.setItemValue("inventar1Choosen");
+            
         }
+
+
 
     },
     "checkCollision": function checkCollision() {
